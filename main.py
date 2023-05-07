@@ -38,7 +38,6 @@ except:
     else:
         print("WeChat File不完整。")
 
-# 拼接
 # 选择单用户
 if len(user_id) > 1:
     print("Wechat File包含的多用户列表如下：")
@@ -48,9 +47,10 @@ if len(user_id) > 1:
     user_id = user_id[choose_i - 1]
     print("选择的用户是：", user_id)
 
+# 获取GIF地址
 gif_dir = os.path.join(wechat_file, user_id[0], "FileStorage", "File",
                        time.strftime("%Y-%m", time.localtime()))  # gif文件夹地址
-gif_all = os.listdir(gif_dir)  # gif按时间顺序排序的列表
+gif_all = os.listdir(gif_dir)  # gif按时间顺序排序的文件名列表，不带路径
 rm_not_gif(gif_all)  # 移除非gif项
 
 for i in gif_all:  # 移除所有gif，防止干扰
@@ -67,9 +67,9 @@ while 1:
     len_b = len(gif_all)
     len_a = len(os.listdir(gif_dir))
     if len_a != len_b:
-        gif_all = sort_by_time(gif_dir)  # 没有考虑月末交接的情况
-        # 只对大于0.1MB的gif有效
-        if (os.path.getsize(os.path.join(gif_dir, gif_all[-1])) / 1024 / 1024) > 0.1:
+        gif_all = sort_by_time(gif_dir)  # 没有考虑月末交接的情况，可能在特殊情况下会出错。
+        # 只对大于1MB的gif有效
+        if (os.path.getsize(os.path.join(gif_dir, gif_all[-1])) / 1024 / 1024) > 1:
             output_file = os.path.join(gif_dir, gif_all[-1])
             print(output_file)
             break
